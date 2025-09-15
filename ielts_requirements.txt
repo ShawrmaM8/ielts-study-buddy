@@ -1,7 +1,0 @@
-streamlit
-pymupdf
-pypdf2
-python-docx
-nltk
-language-tool-python
-regex
