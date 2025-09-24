@@ -95,33 +95,41 @@ if uploaded_file is not None:
 
     # --- Feedback ---
     st.subheader("📊 Language Feedback")
+    # Get language feedback
     try:
-        feedback_list = lang_feedback.generate_feedback(text, lang='en')
-
-        if feedback_list:
-            st.info("Here are some areas for improvement:")
-            for i, f in enumerate(feedback_list):
-                with st.expander(f"Feedback #{i + 1}", expanded=False):
-                    st.write(f"**Sentence:** {f['sentence']}")
-                    st.write(f"**Issue:** {f['issue']}")
-                    st.write(f"**Tip:** {f['tip']}")
-                    if 'translation_tip' in f:
-                        st.write(f"**Tip (Arabic):** {f['translation_tip']}")
-                    st.write("---")
-        else:
-            st.success("🎉 No major language issues detected! Your text looks good!")
-
+        feedback = language_feedback.get_feedback(answer)
+    
+        # Check if LanguageTool needs installation
+        if language_feedback.language_tool is None:
+            installation_msg = language_feedback.get_installation_instruction()
+            if "suggestions" in feedback:
+                feedback["suggestions"].append({
+                    "issue": "Advanced grammar checking not available",
+                    "suggestion": installation_msg,
+                    "category": "system"
+                })
+    
+        return jsonify(feedback)
+    
     except Exception as e:
-        st.error(f"❌ Error generating feedback: {str(e)}")
+        logging.error(f"Error generating feedback: {e}")
+        return jsonify({
+            "error": "Feedback generation failed",
+            "suggestions": [{
+            "issue": "System error",
+            "suggestion": "Please try again or check the logs",
+            "category": "system"
+            }]
+        })
 
-else:
-    st.info("👆 Please upload a PDF, DOCX, or TXT file to get started!")
-    st.write("""
-    ### Supported file types:
-    - **PDF** (.pdf) - Academic papers, articles
-    - **Word Documents** (.docx) - Essays, reports  
-    - **Text Files** (.txt) - Any plain text content
-    """)
+    else:
+        st.info("👆 Please upload a PDF, DOCX, or TXT file to get started!")
+        st.write("""
+        ### Supported file types:
+        - **PDF** (.pdf) - Academic papers, articles
+        - **Word Documents** (.docx) - Essays, reports  
+        - **Text Files** (.txt) - Any plain text content
+        """)
 
 # --- Session Management ---
 if st.button("🔄 Reset Session"):
@@ -133,3 +141,4 @@ if st.button("🔄 Reset Session"):
 st.markdown("---")
 
 st.caption("IELTS Study Buddy • Built for effective English learning and practice")
+
