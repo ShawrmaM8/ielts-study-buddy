@@ -15,8 +15,9 @@ class LanguageFeedback:
             logging.info("LanguageTool initialized successfully")
         except ImportError:
             logging.warning(
-                "LanguageTool not available atm.
-                أداة اللغة غير متوفرة في الوقت الحالي"
+                "LanguageTool not available atm. 
+                أداة اللغة غير متوفرة في الةقت الحالي
+                "
             )
             self.language_tool = None
         except Exception as e:
