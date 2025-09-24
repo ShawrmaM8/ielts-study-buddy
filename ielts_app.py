@@ -3,6 +3,7 @@ import passage_utils as utils
 import passage_summarizer as summarizer
 import eng_flashcards as flashcards
 import lang_feedback
+from language_feedback import language_feedback
 
 st.set_page_config(page_title='IELTS Study Buddy', layout='wide')
 st.title("📚 Study Assistant: IELTS Quiz & Flashcards")
@@ -130,4 +131,5 @@ if st.button("🔄 Reset Session"):
 
 # --- Footer ---
 st.markdown("---")
+
 st.caption("IELTS Study Buddy • Built for effective English learning and practice")
